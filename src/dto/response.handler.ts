@@ -4,11 +4,12 @@ import { Injectable } from "@nestjs/common"
 export default class ResponseHandler {
 
 
-    buildGenericResponse(code: number, message: string, result?: any) {
+    buildGenericResponse(code: number, message: string, data?: any, token?: any) {
         return {
             code,
             message,
-            result
+            data,
+            token
         }
     }
 
