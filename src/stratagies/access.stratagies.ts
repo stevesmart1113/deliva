@@ -1,6 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
-import { ExtractJwt, Strategy } from 'passport-jwt';
+import { ExtractJwt } from 'passport-jwt';
+//import {ExtractJwt, Strategy} from "@nest/passport-local";
+import { Strategy } from 'passport-local';
 
 
 type JwtPayload = {

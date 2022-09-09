@@ -19,6 +19,8 @@ model User {
   password    String?
   status      Int      @default(1)
   token       String?
+  refreshToken String?
   dateCreated DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+

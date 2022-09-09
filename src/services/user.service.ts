@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { ForbiddenException, Injectable } from "@nestjs/common";
 import { User } from "@prisma/client";
 import UserDTO from "src/dto/user.dto";
 import { Tokens } from "src/types/token.types";
@@ -139,4 +139,54 @@ export default class UserService {
         }
     }
 
+    async updateUserRefreshToken(userId: number, refreshToken: string) {
+        try {
+            return this.prisma.user.update({
+                where: {
+                    id: userId
+                },
+                data: {
+                    token: refreshToken
+                }
+            });
+        } catch (err) {
+            throw err;
+        } finally {
+            await this.prisma.$disconnect();
+        }
+    }
+
+    async refreshToken(userId: any, refreshToken: string) {
+        try {
+            let user = await this.prisma.user.findUnique({
+                where: {
+                    id: userId
+                }
+            });
+
+            if (user.token !== refreshToken) {
+                throw new ForbiddenException("Access Denied");
+            }
+
+            const tokens = await this.getToken(
+                userId,
+                user.email
+            );
+
+            await this.updateUserRefreshToken(
+                user.id,
+                tokens.refresh_token
+            );
+            user = null;
+            return tokens;
+        } catch (err) {
+            throw err;
+        } finally {
+            await this.prisma.$disconnect();
+        }
+    }
+    
+    checkUserStatus(id: number) {
+     return this.prisma.user.findOne({ where: {id: id, status: 1}});
+    }
 }

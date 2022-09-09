@@ -21,4 +21,15 @@ export default class ResponseHandler {
             description
         }
     }
+
+    buildSuccessResponse(code: number, message: string, description: string) {
+
+     return {
+             code,
+	     message,
+	     description
+     }
+    }
+	
+	
 }

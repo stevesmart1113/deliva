@@ -1,5 +1,6 @@
-import { Body, Controller, Delete, Get, Injectable, Param, Post, Put, Query } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { Body, Controller, Delete, Get, Injectable, Param, Post, Put, Query, UseGuards } from "@nestjs/common";
+import { AuthGuard } from "@nestjs/passport";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { query } from "express";
 import ResponseHandler from "src/dto/response.handler";
 import UserAuthDTO from "src/dto/user.auth.dto";
@@ -14,6 +15,8 @@ export default class UserController {
         private readonly userService: UserService,
         private readonly response: ResponseHandler) { }
 
+    //@UseGuards(AuthGuard('jwt'))
+    //@ApiBearerAuth('defaultBearerAuth')
     @Get("list")
     async getAll(
         @Query('skip') skip: number, @Query('take') take: number) {
@@ -56,6 +59,7 @@ export default class UserController {
                     currentUser.id,
                     currentUser.email
                 );
+                currentUser.password == undefined
                 return this.response.buildGenericResponse(
                     1001,
                     "User authentication successful",
@@ -77,5 +81,11 @@ export default class UserController {
             )
         }
     }
+
+    @Get('user/status')
+    checkUserStatus() {
+       return null;
+    }
+
 
 }
